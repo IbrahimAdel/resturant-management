@@ -1,5 +1,5 @@
 datasource db {
-  url      = "postgresql://postgres@localhost:5432/sary_assignment?schema=public"
+  url      = "postgresql://postgres@localhost:5432/sary_assignment?schema=public&connection_limit=40"
   provider = "postgresql"
 }
 

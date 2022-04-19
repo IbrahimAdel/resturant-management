@@ -19,7 +19,7 @@ router.post('/login', (async (req, res, next) => {
     if (dbUser) {
       const matchedPassword = await bcrypt.compare(password, dbUser.password);
       if (matchedPassword) {
-        const user = { email };
+        const user = { email, restaurantId: dbUser.restaurantId };
         const accessToken = jwt.sign(user, JWT_SECRET, { expiresIn: '4h' });
         return res.status(200).send({accessToken});
       }
