@@ -1,4 +1,4 @@
-import * as RoleMiddleware from './Role';
+import * as RoleMiddleware from './roleAuth';
 
 export {
   RoleMiddleware

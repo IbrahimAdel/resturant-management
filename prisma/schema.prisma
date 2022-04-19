@@ -17,25 +17,26 @@ model Restaurant {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  createdAt     DateTime        @default(now())
-  email         String          @unique
+  id            Int                     @id @default(autoincrement())
+  createdAt     DateTime                @default(now())
+  email         String                  @unique
+  number        String @db.VarChar(4)   @default("0000")
   password      String?
   name          String?
-  role          Role            @default(User)
-  restaurant    Restaurant?     @relation(fields: [restaurantId], references: [id])
+  role          Role                    @default(User)
+  restaurant    Restaurant?             @relation(fields: [restaurantId], references: [id])
   restaurantId  Int
   @@map("Users")
-
+  @@unique([restaurantId, number])
 }
 
 model Table {
-  id            Int             @id @default(autoincrement())
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
-  capacity      Int             @default(4)
-  number        Int             @default(1)
-  restaurant    Restaurant      @relation(fields: [restaurantId], references: [id])
+  id            Int                     @id @default(autoincrement())
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+  capacity      Int                     @default(4)
+  number        Int                     @default(1)
+  restaurant    Restaurant              @relation(fields: [restaurantId], references: [id])
   restaurantId  Int
 
   @@unique([restaurantId, number])

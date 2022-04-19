@@ -2,7 +2,7 @@ import express from 'express';
 import { getRedisClient } from './redis/RedisHandler';
 import { verifyToken } from "./middleware/jwtAuth";
 import authController from './controllers/auth/authController';
-import { isAdmin } from "./middleware/Role";
+import { isAdmin } from "./middleware/roleAuth";
 
 const app = express();
 

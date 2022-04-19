@@ -39,7 +39,7 @@ router.post('/register', (async (req, res, next) => {
       restaurantName = ''
     } = req.body;
     if (password.trim().length < 6) {
-      return res.status(500).send('password should be more than 6 characters')
+      return res.status(500).send('password should be more than 6 characters');
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
