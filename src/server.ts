@@ -2,13 +2,13 @@ import express from 'express';
 import { getRedisClient } from './redis/RedisHandler';
 import { verifyToken } from "./middleware/jwtAuth";
 import authController from './controllers/auth/authController';
-import { isAdmin } from "./middleware/roleAuth";
+import { RoleMiddleware, JWTMiddleware } from "./middleware";
 
 const app = express();
 
 app.use(express.json());
 const port = 8080;
-app.get( "/", verifyToken, isAdmin, (req, res) => {
+app.get( "/", JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, (req, res) => {
   return res.status(200).send({ message: 'thanks' });
 });
 
