@@ -3,6 +3,7 @@ import {BaseError, ErrorInput} from "../../../errors/errros";
 import {getUserIdByEmail} from "../../../DAL/user.dal";
 import CreateTableDto from "../DTOs/create.table.dto";
 import {getTableByNumberAndRestaurantId} from "../../../DAL/table.dal";
+import {getFutureReservationCountForTable} from "../../../DAL/reservation.dal";
 
 export async function validateCreateUser(user: CreateUserDTO) {
   if (user.password.trim().length < 6) {
@@ -69,11 +70,20 @@ export async function validateDeleteTable(tableNumber: number, restaurantId: num
   const table = await getTableByNumberAndRestaurantId(tableNumber, restaurantId);
   if (!table) {
     const input: ErrorInput = {
-      message: `table with number '${table.number}' doesn't exist`,
+      message: `table with number '${tableNumber}' doesn't exist`,
       code: 400,
       name: 'Table Number Error'
     };
     throw new BaseError(input);
   }
   // TODO no feature reservation
+  const futureReservationsCount = await getFutureReservationCountForTable(table.id);
+  if (futureReservationsCount > 0) {
+    const input: ErrorInput = {
+      message: `table with number '${table.number}' has ${futureReservationsCount} future reservation`,
+      code: 400,
+      name: 'Table Future Reservations Error'
+    };
+    throw new BaseError(input);
+  }
 }

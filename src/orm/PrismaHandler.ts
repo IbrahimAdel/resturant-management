@@ -5,6 +5,8 @@ export const getPrismaClient = () => {
   if (prismaClient) {
     return prismaClient;
   }
-  prismaClient = new PrismaClient();
+  prismaClient = new PrismaClient({
+    rejectOnNotFound: false
+  });
   return prismaClient;
 };

@@ -50,3 +50,24 @@ export const getMinimumCapacity = (restaurantId: number) => {
     }
   }).then((res) => res._min.capacity);
 };
+
+export const getFutureReservationCountForTable = (tableId: number) => {
+  const client = getPrismaClient();
+  return client.reservation.count({
+    where: {
+      tableId,
+      OR: [
+        {
+          from: {
+            gt: new Date()
+          }
+        },
+        {
+          to: {
+            gt: new Date()
+          }
+        }
+      ]
+    }
+  });
+};
