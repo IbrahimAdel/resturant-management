@@ -1,7 +1,9 @@
 import express from 'express';
 import { getRedisClient } from './redis/RedisHandler';
+import { getPrismaClient } from './orm/PrismaHandler';
 import AuthController from './controllers/auth/auth.controller';
 import AdminController from './controllers/admin/admin.controller';
+import ReservationsController from './controllers/reservations/reservations.controller';
 import { RoleMiddleware, JWTMiddleware } from "./middleware";
 
 const app = express();
@@ -13,7 +15,8 @@ app.get( "/", JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, (req, res) => {
 });
 
 app.use('/auth', AuthController);
-app.use('/admin',JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, AdminController);
+app.use('/admin', JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, AdminController);
+app.use('/reservations', JWTMiddleware.verifyToken, ReservationsController);
 
 app.listen( port, async () => {
   const redis = getRedisClient();
@@ -21,6 +24,8 @@ app.listen( port, async () => {
     // tslint:disable-next-line:no-console
     console.log('Redis Connected!');
   });
+  const prismaClient = getPrismaClient();
+  await prismaClient.$connect().then(() => console.log('db connected'));
   await redis.connect();
   // tslint:disable-next-line:no-console
   console.log( `server started at http://localhost:${ port }` );

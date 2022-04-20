@@ -64,3 +64,16 @@ export async function validateCreateTable(table: CreateTableDto) {
     throw new BaseError(input);
   }
 }
+
+export async function validateDeleteTable(tableNumber: number, restaurantId: number) {
+  const table = await getTableByNumberAndRestaurantId(tableNumber, restaurantId);
+  if (!table) {
+    const input: ErrorInput = {
+      message: `table with number '${table.number}' doesn't exist`,
+      code: 400,
+      name: 'Table Number Error'
+    };
+    throw new BaseError(input);
+  }
+  // TODO no feature reservation
+}

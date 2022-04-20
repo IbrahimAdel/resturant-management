@@ -3,10 +3,10 @@ import bcrypt from "bcrypt";
 import CreateUserDTO from "./DTOs/create.user.dto";
 import JWTPayload from "../../models/JWT.Payload.model";
 import {createNonAdminUser} from "../../DAL/user.dal";
-import {validateCreateTable, validateCreateUser} from "./validators/validator";
+import {validateCreateTable, validateCreateUser, validateDeleteTable} from "./validators/validator";
 import ErrorResponseHandler from "../../errors/error.response.handler";
 import CreateTableDto from "./DTOs/create.table.dto";
-import {createTable} from "../../DAL/table.dal";
+import {createTable, deleteTable} from "../../DAL/table.dal";
 
 const router: Router = Router();
 
@@ -52,6 +52,20 @@ router.post('/tables', (async (req, res, next) => {
     await validateCreateTable(tableDto);
     const createdTable = await createTable(tableDto);
     return res.status(200).send(createdTable);
+  } catch (e) {
+    return ErrorResponseHandler(res, e);
+  }
+}));
+
+router.delete('/tables/:tableNumber', (async (req, res, next) => {
+  try {
+    const {
+      tableNumber
+    } = req.params;
+    const authUser = req.body.AUTH_USER as JWTPayload;
+    await validateDeleteTable(+tableNumber, authUser.restaurantId);
+    const deletedTable = await deleteTable(+tableNumber, authUser.restaurantId);
+    return res.status(200).send(deletedTable);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }

@@ -23,3 +23,15 @@ export const createTable = async (table: CreateTableDto) => {
     }
   });
 };
+
+export const deleteTable = async (tableNumber: number, restaurantId: number) => {
+  const client = getPrismaClient();
+  return client.table.delete({
+    where: {
+      restaurantId_number: {
+        number: tableNumber,
+        restaurantId
+      }
+    }
+  });
+};
