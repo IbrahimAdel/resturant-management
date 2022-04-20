@@ -80,7 +80,7 @@ export async function validateDeleteTable(tableNumber: number, restaurantId: num
   const futureReservationsCount = await getFutureReservationCountForTable(table.id);
   if (futureReservationsCount > 0) {
     const input: ErrorInput = {
-      message: `table with number '${table.number}' has ${futureReservationsCount} future reservation`,
+      message: `table with number '${tableNumber}' has ${futureReservationsCount} future reservation`,
       code: 400,
       name: 'Table Future Reservations Error'
     };
