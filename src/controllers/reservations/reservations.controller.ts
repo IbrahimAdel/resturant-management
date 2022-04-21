@@ -1,26 +1,27 @@
 import {Router} from "express";
 import ErrorResponseHandler from "../../errors/error.response.handler";
-import {getEndOfTheDay, getStartOfTheDay} from "./utilities/date.utilities";
-import {getFreeSlotsForDateRange} from "../../DAL/reservation.dal";
+import {getMinimumCapacity} from "../../DAL/table.dal";
 import JWTPayload from "../../models/JWT.Payload.model";
-import {addFreeSlotsToTables} from "./utilities/free.slots.utilities";
+import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
+import {getFreeSlots} from "./utilities/free.slots.utilities";
 
 const router: Router = Router();
 
-router.get('/', (async (req, res, next) => {
+router.get('/available', (async (req, res, next) => {
   try {
-    const from = req.query.from as string;
-    const to = req.query.to as string;
+    let from = req.query.from as any;
+    let to = req.query.to as any;
     const requiredSeats = req.query.requiredSeats as string;
-    const formattedFromDate = new Date(from);
-    const formattedToDate = new Date(to);
-    const { offset, limit } = req.query;
+    from = new Date(from);
+    to = new Date(to);
     const authUser = req.body.AUTH_USER as JWTPayload;
-    const result = await getFreeSlotsForDateRange(
-      formattedFromDate, formattedToDate, +requiredSeats, authUser.restaurantId, +limit, +offset
+    const { restaurantId } = authUser;
+    const minimumCapacity = await getMinimumCapacity(restaurantId, +requiredSeats);
+    const tables = await getTablesWithExactCapacityIncludingReservations(
+      restaurantId, minimumCapacity, from, to
     );
-    result.rows = addFreeSlotsToTables(result.rows);
-    return res.status(200).send(result);
+    const slots = getFreeSlots(tables, from, to);
+    return res.status(200).send(slots);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }
