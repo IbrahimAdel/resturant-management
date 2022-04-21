@@ -1,5 +1,6 @@
 import {TimeSlot} from "../../../models/TimeSlot.model";
-import {Reservation, Prisma} from "@prisma/client";
+import {Prisma, Reservation} from "@prisma/client";
+import {getEndOfTheDay, getStartOfTheDay} from "./date.utilities";
 
 const tableWithReservations = Prisma.validator<Prisma.TableArgs>()({
   include: {reservations: true},
@@ -102,7 +103,9 @@ function timeSlotsIntersection(a: TimeSlot, b: TimeSlot): TimeSlot | undefined {
 
 function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCount: number, from: Date, to: Date) {
   const slots: TimeSlot[] = [];
-  let slot: TimeSlot = {from};
+  const startOfDay = getStartOfTheDay(from);
+  const startingTime = from > startOfDay ? from : startOfDay;
+  let slot: TimeSlot = { from: startingTime };
   for (const intersection of aggregateIntersections) {
     if (intersection.tableIds.length === tablesCount) {
       // if there is some time between intersections, we add an available slot
@@ -113,7 +116,8 @@ function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCo
       slot = {from: intersection.to};
     }
   }
-  slot.to = to;
+  const endOfDay = getEndOfTheDay(from);
+  slot.to = to < endOfDay ? to : endOfDay;
   slots.push(slot);
   return slots;
 }
