@@ -5,7 +5,10 @@ import JWTPayload from "../../models/JWT.Payload.model";
 import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
 import {getFreeSlots} from "./utilities/free.slots.utilities";
 import {validateCreateReservation, validateGetAvailableReservationSlots} from "./validators/reservations.validator";
-import {createReservationByTableNumber} from "../../DAL/reservation.dal";
+import {
+  createReservationByTableNumber,
+  getAllReservationsInDayPaginated
+} from "../../DAL/reservation.dal";
 
 const router: Router = Router();
 
@@ -47,11 +50,14 @@ router.post('/', (async (req, res, next) => {
   }
 }));
 
-router.get('/', (async (req, res, next) => {
+router.get('/today', (async (req, res, next) => {
   try {
     const today = new Date();
-    const authUser = res.locals.AUTH_USER as JWTPayload;
-    return res.status(200).send();
+    const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
+    const limit = +req.query.limit || 10;
+    const offset = +req.query.offset || 0;
+    const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit);
+    return res.status(200).send(result);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }

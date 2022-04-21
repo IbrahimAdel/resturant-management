@@ -1,7 +1,7 @@
 import { getPrismaClient } from "../orm/PrismaHandler";
 import CreateUserDTO from "../controllers/admin/DTOs/create.user.dto";
 
-export const getUserRole = (email: string) => {
+export const getUserRoleFromDB = (email: string) => {
   const client = getPrismaClient();
   return client.user
     .findUnique({

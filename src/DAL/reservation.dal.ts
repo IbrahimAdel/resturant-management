@@ -1,6 +1,8 @@
 import {getPrismaClient} from "../orm/PrismaHandler";
 import {TimeSlot} from "../models/TimeSlot.model";
 import {getEndOfTheDay, getStartOfTheDay} from "../controllers/reservations/utilities/date.utilities";
+import exp from "constants";
+import {Page} from "../models/Page.model";
 
 export const getFutureReservationCountForTable = (tableId: number) => {
   const client = getPrismaClient();
@@ -79,4 +81,30 @@ export const createReservationByTableNumber = (tableNumber: number, restaurantId
       }
     }
   });
+};
+
+export const getAllReservationsInDayPaginated = async (
+  date: Date, restaurantId: number, offset = 0, limit = 10
+): Promise<Page> => {
+  const client = getPrismaClient();
+  const args = {
+    where: {
+      from: {
+        gte: getStartOfTheDay(date)
+      },
+      to: {
+        lte: getEndOfTheDay(date)
+      },
+      table: {
+        restaurantId
+      }
+    }
+  };
+  const total = await client.reservation.count(args);
+  const rows = await client.reservation.findMany({
+    ...args,
+    take: limit,
+    skip: offset
+  });
+  return { rows, total }as Page;
 };
