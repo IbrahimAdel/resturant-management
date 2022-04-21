@@ -18,7 +18,7 @@ router.post('/users', (async (req, res, next) => {
       name = '',
       number: userNumber = ''
     } = req.body;
-    const authUser = req.body.AUTH_USER as JWTPayload;
+    const authUser = res.locals.AUTH_USER as JWTPayload;
     const userDTO: CreateUserDTO = {
       name,
       email,
@@ -43,7 +43,7 @@ router.post('/tables', (async (req, res, next) => {
       number: tableNumber = 0,
       capacity = 0,
     } = req.body;
-    const authUser = req.body.AUTH_USER as JWTPayload;
+    const authUser = res.locals.AUTH_USER as JWTPayload;
     const tableDto: CreateTableDto = {
       number: tableNumber,
       capacity,
@@ -62,7 +62,7 @@ router.delete('/tables/:tableNumber', (async (req, res, next) => {
     const {
       tableNumber
     } = req.params;
-    const authUser = req.body.AUTH_USER as JWTPayload;
+    const authUser = res.locals.AUTH_USER as JWTPayload;
     await validateDeleteTable(+tableNumber, authUser.restaurantId);
     const deletedTable = await deleteTable(+tableNumber, authUser.restaurantId);
     return res.status(200).send(deletedTable);

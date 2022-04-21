@@ -10,7 +10,7 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
     if (!accessToken) {
       throw new Error('unauthorized');
     }
-    req.body.AUTH_USER = await jwt.verify(accessToken, JWT_SECRET) as JWTPayload;
+    res.locals.AUTH_USER = await jwt.verify(accessToken, JWT_SECRET) as JWTPayload;
 
     next();
   } catch (e) {

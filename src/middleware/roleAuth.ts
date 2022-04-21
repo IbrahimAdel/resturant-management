@@ -4,7 +4,7 @@ import {getUserRole} from "../DAL/user.dal";
 
 const TWO_HOURS = 60 * 60 * 2;
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
-  const { AUTH_USER } = req.body;
+  const { AUTH_USER } = res.locals;
   const redis = getRedisClient();
   let role = await redis.get(AUTH_USER.email);
   if (!role) {
