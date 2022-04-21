@@ -16,6 +16,8 @@ router.get('/available', (async (req, res, next) => {
     to = new Date(to);
     const authUser = req.body.AUTH_USER as JWTPayload;
     const { restaurantId } = authUser;
+
+    // null if there is no match from the requiredSeats
     const minimumCapacity = await getMinimumCapacity(restaurantId, +requiredSeats);
     const tables = await getTablesWithExactCapacityIncludingReservations(
       restaurantId, minimumCapacity, from, to
