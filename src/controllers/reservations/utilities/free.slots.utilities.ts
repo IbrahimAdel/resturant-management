@@ -13,7 +13,6 @@ export function getFreeSlots(
 ): TimeSlot[] {
   // reservations in tables should be sorted by 'from' date.
   const intersections = findAllIntersections(tables, from, to);
-  console.log(JSON.stringify(intersections));
   return generateAvailableTimeSlots(intersections, tables.length, from, to);
 }
 
@@ -34,7 +33,7 @@ function findAllIntersections(tables: TableWithReservations[], from: Date, to: D
   if (intersections.length === 1) {
     return intersections;
   }
-  const aggregatedIntersections = [];
+  const aggregatedIntersections: TimeSlot[] = [];
 
   for (let i = 0; i < intersections.length; i++) {
     const currentIntersection = intersections[i];
@@ -42,7 +41,11 @@ function findAllIntersections(tables: TableWithReservations[], from: Date, to: D
       const nextIntersection = intersections[j];
       const result = timeSlotsIntersection(currentIntersection, nextIntersection);
       if (result) {
-        aggregatedIntersections.push(result);
+        const found = aggregatedIntersections.find((inter) => inter.from.valueOf() === result.from.valueOf()
+          && inter.to.valueOf() === result.to.valueOf() && compareArrays(inter.tableIds, result.tableIds));
+        if (!found) {
+          aggregatedIntersections.push(result);
+        }
       }
     }
   }
@@ -113,4 +116,8 @@ function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCo
   slot.to = to;
   slots.push(slot);
   return slots;
+}
+
+function compareArrays(a: any[], b: any[]) {
+  return a.length === b.length && a.every((a1) => b.includes(a1));
 }
