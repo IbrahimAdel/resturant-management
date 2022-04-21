@@ -4,21 +4,21 @@ import {getMinimumCapacity} from "../../DAL/table.dal";
 import JWTPayload from "../../models/JWT.Payload.model";
 import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
 import {getFreeSlots} from "./utilities/free.slots.utilities";
+import {validateGetAvailableReservationSlots} from "./validators/reservations.validator";
 
 const router: Router = Router();
 
 router.get('/available', (async (req, res, next) => {
   try {
-    let from = req.query.from as any;
-    let to = req.query.to as any;
     const requiredSeats = req.query.requiredSeats as string;
-    from = new Date(from);
-    to = new Date(to);
+    const from = new Date(req.query.from as string);
+    const to = new Date(req.query.to as string);
     const authUser = req.body.AUTH_USER as JWTPayload;
     const { restaurantId } = authUser;
 
-    // null if there is no match from the requiredSeats
+    // minimumCapacity is null if there is no match from the requiredSeats
     const minimumCapacity = await getMinimumCapacity(restaurantId, +requiredSeats);
+    validateGetAvailableReservationSlots(from, to, +requiredSeats, minimumCapacity);
     const tables = await getTablesWithExactCapacityIncludingReservations(
       restaurantId, minimumCapacity, from, to
     );
