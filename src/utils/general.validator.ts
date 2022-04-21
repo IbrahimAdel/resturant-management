@@ -46,3 +46,16 @@ export function validateFromAndToDates(from: Date, to: Date) {
     throw new BaseError(input);
   }
 }
+
+// pagination limit guard for high values
+export function validateLimitPagination(limit: number) {
+  const maxLimit = 200;
+  if (limit > maxLimit) {
+    const input: ErrorInput = {
+      message: `'limit' should be lower than ${maxLimit}`,
+      code: 400,
+      name: `Query Parameters Error`
+    };
+    throw new BaseError(input);
+  }
+}

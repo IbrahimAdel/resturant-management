@@ -9,6 +9,7 @@ import {
   createReservationByTableNumber,
   getAllReservationsInDayPaginated
 } from "../../DAL/reservation.dal";
+import {validateLimitPagination} from "../../utils/general.validator";
 
 const router: Router = Router();
 
@@ -56,6 +57,7 @@ router.get('/today', (async (req, res, next) => {
     const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
     const limit = +req.query.limit || 10;
     const offset = +req.query.offset || 0;
+    validateLimitPagination(limit);
     const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit);
     return res.status(200).send(result);
   } catch (e) {

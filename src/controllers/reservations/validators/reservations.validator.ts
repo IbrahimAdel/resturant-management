@@ -1,5 +1,5 @@
 import { BaseError, ErrorInput } from "../../../errors/errros";
-import { validateFromAndToDates } from "../../../utils/general.utils";
+import { validateFromAndToDates } from "../../../utils/general.validator";
 import { countReservationsInTimeSlot } from "../../../DAL/reservation.dal";
 
 export function validateGetAvailableReservationSlots(
