@@ -11,8 +11,9 @@ export function getFreeSlots(
   from: Date,
   to: Date
 ): TimeSlot[] {
-  const intersections = findAllIntersections(tables, from, to);
   // reservations in tables should be sorted by 'from' date.
+  const intersections = findAllIntersections(tables, from, to);
+  console.log(JSON.stringify(intersections));
   return generateAvailableTimeSlots(intersections, tables.length, from, to);
 }
 
@@ -22,16 +23,33 @@ function findAllIntersections(tables: TableWithReservations[], from: Date, to: D
       .map((r) => ({from: r.from, to: r.to, tables}));
     return generateAvailableTimeSlots(allIntersections, tables.length, from, to);
   }
-  let intersections: TimeSlot[] = [];
-  for (let i = 1; i < tables.length; i++) {
+  const intersections: TimeSlot[] = [];
+  for (let i = 0; i < tables.length; i++) {
     const currentTable = tables[i];
-    const previousTable = tables[i - 1];
-    intersections = [...intersections, ...intervalIntersection(currentTable.reservations, previousTable.reservations)];
+    for (let j = i + 1; j < tables.length; j++) {
+      const nextTable = tables[j];
+      intersections.push(...reservationIntersection(currentTable.reservations, nextTable.reservations));
+    }
   }
-  return intersections;
+  if (intersections.length === 1) {
+    return intersections;
+  }
+  const aggregatedIntersections = [];
+
+  for (let i = 0; i < intersections.length; i++) {
+    const currentIntersection = intersections[i];
+    for (let j = i + 1; j < intersections.length; j++) {
+      const nextIntersection = intersections[j];
+      const result = timeSlotsIntersection(currentIntersection, nextIntersection);
+      if (result) {
+        aggregatedIntersections.push(result);
+      }
+    }
+  }
+  return aggregatedIntersections;
 }
 
-function intervalIntersection(a: Reservation[], b: Reservation[]): TimeSlot[] {
+function reservationIntersection(a: Reservation[], b: Reservation[]): TimeSlot[] {
   let aPointer = 0;
   let bPointer = 0;
   const result: TimeSlot[] = [];
@@ -48,7 +66,7 @@ function intervalIntersection(a: Reservation[], b: Reservation[]): TimeSlot[] {
       result.push({
         from: new Date(maxStart),
         to: new Date(minEnd),
-        tables: [{id: a[aPointer].tableId}, {id: b[bPointer].tableId}]
+        tableIds: [a[aPointer].tableId, b[bPointer].tableId]
       });
     }
 
@@ -63,17 +81,33 @@ function intervalIntersection(a: Reservation[], b: Reservation[]): TimeSlot[] {
   return result;
 }
 
+function timeSlotsIntersection(a: TimeSlot, b: TimeSlot): TimeSlot | undefined {
+  const maxStart = Math.max(a.from.valueOf(), b.from.valueOf());
+
+  // smallest end point of the interval
+  const minEnd = Math.min(a.to.valueOf(), b.to.valueOf());
+  if (maxStart < minEnd) {
+    return {
+      from: new Date(maxStart),
+      to: new Date(minEnd),
+      tableIds: Array.from(new Set([...a.tableIds, ...b.tableIds]))
+    };
+  }
+  return undefined;
+}
+
+
 function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCount: number, from: Date, to: Date) {
   const slots: TimeSlot[] = [];
-  let slot: TimeSlot = { from };
+  let slot: TimeSlot = {from};
   for (const intersection of aggregateIntersections) {
-    if (intersection.tables.length === tablesCount) {
+    if (intersection.tableIds.length === tablesCount) {
       // if there is some time between intersections, we add an available slot
       if (intersection.from > slot.from) {
         slot.to = intersection.from;
         slots.push(slot);
       }
-      slot = { from: intersection.to };
+      slot = {from: intersection.to};
     }
   }
   slot.to = to;
