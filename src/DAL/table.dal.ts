@@ -67,17 +67,31 @@ export const getTablesWithExactCapacityIncludingReservations = async (
           OR: [
             {
               from: {
-                lte: getEndOfTheDay(from),
-                gte: from
+                gt: from,
+                lt: to
               }
             },
             {
               to: {
-                lte: to,
-                gte: getStartOfTheDay(to)
+                lt: to,
+                gt: from
               }
             },
-          ]
+            {
+              from: {
+                lte: from
+              },
+              to: {
+                gte: to
+              }
+            }
+          ],
+          from: {
+            gte: getStartOfTheDay(from)
+          },
+          to: {
+            lte: getEndOfTheDay(from)
+          }
         }
       },
     }
