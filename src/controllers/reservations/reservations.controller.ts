@@ -4,12 +4,15 @@ import {getMinimumCapacity} from "../../DAL/table.dal";
 import JWTPayload from "../../models/JWT.Payload.model";
 import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
 import {getFreeSlots} from "./utilities/free.slots.utilities";
-import {validateCreateReservation, validateGetAvailableReservationSlots} from "./validators/reservations.validator";
+import {
+  validateCreateReservation,
+  validateGetAvailableReservationSlots,
+  validateGetTodayReservations
+} from "./validators/reservations.validator";
 import {
   createReservationByTableNumber,
   getAllReservationsInDayPaginated
 } from "../../DAL/reservation.dal";
-import {validateLimitPagination} from "../../utils/general.validator";
 
 const router: Router = Router();
 
@@ -57,8 +60,10 @@ router.get('/today', (async (req, res, next) => {
     const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
     const limit = +req.query.limit || 10;
     const offset = +req.query.offset || 0;
-    validateLimitPagination(limit);
-    const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit);
+    let orderType = (req.query.order || 'asc') as 'asc' | 'desc' ;
+    orderType = orderType.toLowerCase() as 'asc' | 'desc';
+    validateGetTodayReservations(orderType, limit);
+    const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit, orderType);
     return res.status(200).send(result);
   } catch (e) {
     return ErrorResponseHandler(res, e);

@@ -84,7 +84,7 @@ export const createReservationByTableNumber = (tableNumber: number, restaurantId
 };
 
 export const getAllReservationsInDayPaginated = async (
-  date: Date, restaurantId: number, offset = 0, limit = 10
+  date: Date, restaurantId: number, offset = 0, limit = 10, orderType: 'asc' | 'desc'
 ): Promise<Page> => {
   const client = getPrismaClient();
   const args = {
@@ -104,7 +104,10 @@ export const getAllReservationsInDayPaginated = async (
   const rows = await client.reservation.findMany({
     ...args,
     take: limit,
-    skip: offset
+    skip: offset,
+    orderBy: [{
+      from: orderType
+    }]
   });
   return { rows, total }as Page;
 };

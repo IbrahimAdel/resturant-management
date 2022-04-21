@@ -1,5 +1,5 @@
 import { BaseError, ErrorInput } from "../../../errors/errros";
-import { validateFromAndToDates } from "../../../utils/general.validator";
+import {validateFromAndToDates, validateLimitPagination} from "../../../utils/general.validator";
 import { countReservationsInTimeSlot } from "../../../DAL/reservation.dal";
 
 export function validateGetAvailableReservationSlots(
@@ -24,6 +24,18 @@ export async function validateCreateReservation(from: Date, to: Date, tableNumbe
       message: `table '${tableNumber}' has reservations in the specified time period`,
       code: 400,
       name: 'Reservation Error'
+    };
+    throw new BaseError(input);
+  }
+}
+
+export function validateGetTodayReservations(orderType: string, limit: number) {
+  validateLimitPagination(limit);
+  if (orderType.toLowerCase() !== 'asc' && orderType.toLowerCase() !== 'desc') {
+    const input: ErrorInput = {
+      message: `'order' should be either 'asc' or 'desc'`,
+      code: 400,
+      name: `Query Parameters Error`
     };
     throw new BaseError(input);
   }
