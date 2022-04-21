@@ -58,9 +58,12 @@ export const getTablesWithExactCapacityIncludingReservations = async (
   const client = getPrismaClient();
   return client.table.findMany({
     where: {
-      capacity,
+      capacity
+    },
+    include: {
       reservations: {
-        some: {
+        orderBy: [{from: 'asc'}],
+        where: {
           OR: [
             {
               from: {
@@ -76,11 +79,6 @@ export const getTablesWithExactCapacityIncludingReservations = async (
             },
           ]
         }
-      }
-    },
-    include: {
-      reservations: {
-        orderBy: [{ from: 'asc' }]
       },
     }
   });
