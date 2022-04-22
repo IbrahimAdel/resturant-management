@@ -1,14 +1,18 @@
-FROM node:14.15.0
+FROM node:14
 
 RUN mkdir -p /usr/src/app
 
 WORKDIR /usr/src/app
 
-COPY package.json /usr/src/app/
+COPY package.json .
+
+COPY prisma ./prisma/
 
 RUN npm install
 
-COPY . /usr/src/app
+RUN npx prisma generate
+
+COPY . .
 
 EXPOSE 8080
 

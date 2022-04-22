@@ -7,7 +7,7 @@ export const getRedisClient = () => {
     return redis;
   }
   redis = createClient({
-    url: 'redis://ibrahim:secret@cache:6379'
+    url: 'redis://default:secret@cache:6379'
   });
   return redis;
 };

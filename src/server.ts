@@ -29,6 +29,7 @@ app.listen(port, async () => {
         console.log('db connected');
       });
       await redis.connect();
+      break;
     } catch (e) {
       console.log('logging error:');
       console.log(e)
