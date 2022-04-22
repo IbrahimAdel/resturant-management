@@ -1,4 +1,4 @@
-import { getPrismaClient } from "../orm/PrismaHandler";
+import { getPrismaClient } from '../orm/PrismaHandler';
 
 export const getRestaurantWithAdmin = async (id: number) => {
   const client = getPrismaClient();
@@ -20,18 +20,16 @@ export const getRestaurantWithAdmin = async (id: number) => {
   });
 };
 
-export const createRestaurantWithAdmin = async (restaurantName: string, username: string, hashedPassword: string) => {
-  return await getPrismaClient().restaurant
-    .create({
-      data: {
-        name: restaurantName,
-        users: {
-          create: {
-            email: username,
-            password: hashedPassword,
-            role: 'Admin'
-          }
+export const createRestaurantWithAdmin = async (restaurantName: string, username: string, hashedPassword: string) => await getPrismaClient().restaurant
+  .create({
+    data: {
+      name: restaurantName,
+      users: {
+        create: {
+          email: username,
+          password: hashedPassword,
+          role: 'Admin'
         }
       }
-    });
-};
+    }
+  });

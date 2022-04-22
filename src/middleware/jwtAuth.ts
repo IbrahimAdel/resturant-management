@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response} from 'express';
-import {JWT_SECRET} from '../config/secrets';
-import * as jwt from "jsonwebtoken";
-import JWTPayload from "../models/JWT.Payload.model";
+import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { JWT_SECRET } from '../config/secrets';
+import JWTPayload from '../models/JWT.Payload.model';
 
 async function verifyToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  const accessToken = authHeader ? authHeader.split(' ') [1] : undefined;
+  const accessToken = authHeader ? authHeader.split(' ')[1] : undefined;
   try {
     if (!accessToken) {
       throw new Error('unauthorized');

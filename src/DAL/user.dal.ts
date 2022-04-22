@@ -1,5 +1,5 @@
-import { getPrismaClient } from "../orm/PrismaHandler";
-import CreateUserDTO from "../controllers/admin/DTOs/create.user.dto";
+import { getPrismaClient } from '../orm/PrismaHandler';
+import CreateUserDTO from '../controllers/admin/DTOs/create.user.dto';
 
 export const getUserRoleFromDB = (email: string) => {
   const client = getPrismaClient();

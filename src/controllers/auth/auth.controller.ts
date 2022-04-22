@@ -1,9 +1,9 @@
-import { Router } from "express";
-import * as jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../../config/secrets";
-import { getPrismaClient } from "../../orm/PrismaHandler";
+import { Router } from 'express';
+import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import {createRestaurantWithAdmin, getRestaurantWithAdmin} from "../../DAL/restaurant.dal";
+import { JWT_SECRET } from '../../config/secrets';
+import { getPrismaClient } from '../../orm/PrismaHandler';
+import { createRestaurantWithAdmin, getRestaurantWithAdmin } from '../../DAL/restaurant.dal';
 
 const router: Router = Router();
 
@@ -21,7 +21,7 @@ router.post('/login', (async (req, res, next) => {
       if (matchedPassword) {
         const user = { email, restaurantId: dbUser.restaurantId };
         const accessToken = jwt.sign(user, JWT_SECRET, { expiresIn: '4h' });
-        return res.status(200).send({accessToken});
+        return res.status(200).send({ accessToken });
       }
       return res.status(403).send('Unauthorized');
     }

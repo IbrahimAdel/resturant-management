@@ -1,5 +1,6 @@
 import { Response } from 'express';
-import {BaseError} from "./errros";
+import { BaseError } from './errros';
+
 export default function (res: Response, err: any) {
   if (err instanceof BaseError) {
     return res.status(err.code).send({

@@ -1,11 +1,9 @@
-import { BaseError, ErrorInput } from "../../../errors/errros";
-import {validateFromAndToDates, validateLimitPagination} from "../../../utils/general.validator";
-import {countReservationsInTimeSlot, getReservationByIdAndRestaurantId} from "../../../DAL/reservation.dal";
-import {getEndOfTheDay} from "../utilities/date.utilities";
+import { BaseError, ErrorInput } from '../../../errors/errros';
+import { validateFromAndToDates, validateLimitPagination } from '../../../utils/general.validator';
+import { countReservationsInTimeSlot, getReservationByIdAndRestaurantId } from '../../../DAL/reservation.dal';
+import { getEndOfTheDay } from '../utilities/date.utilities';
 
-export function validateGetAvailableReservationSlots(
-  from: Date, to: Date, requiredSeats: number, minimumCapacity: number
-) {
+export function validateGetAvailableReservationSlots(from: Date, to: Date, requiredSeats: number, minimumCapacity: number) {
   validateFromAndToDates(from, to);
   if (!minimumCapacity) {
     const input: ErrorInput = {

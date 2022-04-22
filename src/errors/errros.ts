@@ -1,5 +1,6 @@
 export class BaseError extends Error {
   code: number;
+
   constructor(
     errorInput: ErrorInput
   ) {

@@ -1,9 +1,9 @@
-import CreateUserDTO from "../DTOs/create.user.dto";
-import {BaseError, ErrorInput} from "../../../errors/errros";
-import {getUserIdByEmail} from "../../../DAL/user.dal";
-import CreateTableDto from "../DTOs/create.table.dto";
-import {getTableByNumberAndRestaurantId} from "../../../DAL/table.dal";
-import {getFutureReservationCountForTable} from "../../../DAL/reservation.dal";
+import CreateUserDTO from '../DTOs/create.user.dto';
+import { BaseError, ErrorInput } from '../../../errors/errros';
+import { getUserIdByEmail } from '../../../DAL/user.dal';
+import CreateTableDto from '../DTOs/create.table.dto';
+import { getTableByNumberAndRestaurantId } from '../../../DAL/table.dal';
+import { getFutureReservationCountForTable } from '../../../DAL/reservation.dal';
 
 export async function validateCreateUser(user: CreateUserDTO) {
   if (user.password.trim().length < 6) {

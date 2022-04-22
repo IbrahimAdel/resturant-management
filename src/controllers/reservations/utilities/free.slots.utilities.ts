@@ -1,9 +1,9 @@
-import {TimeSlot} from "../../../models/TimeSlot.model";
-import {Prisma, Reservation} from "@prisma/client";
-import {getEndOfTheDay, getStartOfTheDay} from "./date.utilities";
+import { Prisma, Reservation } from '@prisma/client';
+import { TimeSlot } from '../../../models/TimeSlot.model';
+import { getEndOfTheDay, getStartOfTheDay } from './date.utilities';
 
 const tableWithReservations = Prisma.validator<Prisma.TableArgs>()({
-  include: {reservations: true},
+  include: { reservations: true },
 });
 type TableWithReservations = Prisma.TableGetPayload<typeof tableWithReservations>;
 
@@ -20,7 +20,7 @@ export function getFreeSlots(
 function findAllIntersections(tables: TableWithReservations[], from: Date, to: Date) {
   if (tables.length === 1) {
     const allIntersections: TimeSlot[] = tables[0].reservations
-      .map((r) => ({from: r.from, to: r.to, tables}));
+      .map((r) => ({ from: r.from, to: r.to, tables }));
     return generateAvailableTimeSlots(allIntersections, tables.length, from, to);
   }
   const intersections: TimeSlot[] = [];
@@ -100,7 +100,6 @@ function timeSlotsIntersection(a: TimeSlot, b: TimeSlot): TimeSlot | undefined {
   return undefined;
 }
 
-
 function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCount: number, from: Date, to: Date) {
   const slots: TimeSlot[] = [];
   const startOfDay = getStartOfTheDay(from);
@@ -113,7 +112,7 @@ function generateAvailableTimeSlots(aggregateIntersections: TimeSlot[], tablesCo
         slot.to = intersection.from;
         slots.push(slot);
       }
-      slot = {from: intersection.to};
+      slot = { from: intersection.to };
     }
   }
   const endOfDay = getEndOfTheDay(from);

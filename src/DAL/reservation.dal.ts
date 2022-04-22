@@ -1,8 +1,6 @@
-import {getPrismaClient} from "../orm/PrismaHandler";
-import {TimeSlot} from "../models/TimeSlot.model";
-import {getEndOfTheDay, getStartOfTheDay} from "../controllers/reservations/utilities/date.utilities";
-import exp from "constants";
-import {Page} from "../models/Page.model";
+import { getPrismaClient } from '../orm/PrismaHandler';
+import { getEndOfTheDay, getStartOfTheDay } from '../controllers/reservations/utilities/date.utilities';
+import { Page } from '../models/Page.model';
 
 export const getFutureReservationCountForTable = (tableId: number) => {
   const client = getPrismaClient();
@@ -83,9 +81,7 @@ export const createReservationByTableNumber = (tableNumber: number, restaurantId
   });
 };
 
-export const getAllReservationsInDayPaginated = async (
-  date: Date, restaurantId: number, offset = 0, limit = 10, orderType: 'asc' | 'desc'
-): Promise<Page> => {
+export const getAllReservationsInDayPaginated = async (date: Date, restaurantId: number, offset = 0, limit = 10, orderType: 'asc' | 'desc'): Promise<Page> => {
   const client = getPrismaClient();
   const args = {
     where: {
@@ -113,9 +109,13 @@ export const getAllReservationsInDayPaginated = async (
 };
 
 export const getReservationsPaginated = async (
-  restaurantId: number, tableNumbers: number[] | undefined,
-  from: Date, to: Date, orderType: 'asc' | 'desc',
-  offset: number, limit: number
+  restaurantId: number,
+  tableNumbers: number[] | undefined,
+  from: Date,
+  to: Date,
+  orderType: 'asc' | 'desc',
+  offset: number,
+  limit: number
 ): Promise<Page> => {
   const client = getPrismaClient();
   const args = {

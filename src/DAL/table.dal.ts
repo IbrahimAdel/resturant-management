@@ -1,6 +1,6 @@
-import {getPrismaClient} from "../orm/PrismaHandler";
-import CreateTableDto from "../controllers/admin/DTOs/create.table.dto";
-import {getEndOfTheDay, getStartOfTheDay} from "../controllers/reservations/utilities/date.utilities";
+import { getPrismaClient } from '../orm/PrismaHandler';
+import CreateTableDto from '../controllers/admin/DTOs/create.table.dto';
+import { getEndOfTheDay, getStartOfTheDay } from '../controllers/reservations/utilities/date.utilities';
 
 export const getTableByNumberAndRestaurantId = async (tableNumber: number, restaurantId: number) => {
   const client = getPrismaClient();
@@ -52,9 +52,7 @@ export const getMinimumCapacity = (restaurantId: number, minimumSeats: number) =
   }).then((res) => res._min.capacity);
 };
 
-export const getTablesWithExactCapacityIncludingReservations = async (
-  restaurantId: number, capacity: number, from: Date, to: Date
-) => {
+export const getTablesWithExactCapacityIncludingReservations = async (restaurantId: number, capacity: number, from: Date, to: Date) => {
   const client = getPrismaClient();
   return client.table.findMany({
     where: {
@@ -62,7 +60,7 @@ export const getTablesWithExactCapacityIncludingReservations = async (
     },
     include: {
       reservations: {
-        orderBy: [{from: 'asc'}],
+        orderBy: [{ from: 'asc' }],
         where: {
           OR: [
             {

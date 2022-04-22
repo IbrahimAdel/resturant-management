@@ -1,12 +1,12 @@
-import { Router } from "express";
-import bcrypt from "bcrypt";
-import CreateUserDTO from "./DTOs/create.user.dto";
-import JWTPayload from "../../models/JWT.Payload.model";
-import {createNonAdminUser} from "../../DAL/user.dal";
-import {validateCreateTable, validateCreateUser, validateDeleteTable} from "./validators/validator";
-import ErrorResponseHandler from "../../errors/error.response.handler";
-import CreateTableDto from "./DTOs/create.table.dto";
-import {createTable, deleteTable} from "../../DAL/table.dal";
+import { Router } from 'express';
+import bcrypt from 'bcrypt';
+import CreateUserDTO from './DTOs/create.user.dto';
+import JWTPayload from '../../models/JWT.Payload.model';
+import { createNonAdminUser } from '../../DAL/user.dal';
+import { validateCreateTable, validateCreateUser, validateDeleteTable } from './validators/validator';
+import ErrorResponseHandler from '../../errors/error.response.handler';
+import CreateTableDto from './DTOs/create.table.dto';
+import { createTable, deleteTable } from '../../DAL/table.dal';
 
 const router: Router = Router();
 
@@ -70,7 +70,5 @@ router.delete('/tables/:tableNumber', (async (req, res, next) => {
     return ErrorResponseHandler(res, e);
   }
 }));
-
-
 
 export default router;
