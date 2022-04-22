@@ -21,7 +21,7 @@ services:
       - cache:/data
 
   api:
-    image: sary-assingment
+    image: ibrahimhussein/reservations
     ports:
       - '8080:8080'
     depends_on:
