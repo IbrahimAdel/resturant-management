@@ -109,5 +109,39 @@ export const getAllReservationsInDayPaginated = async (
       from: orderType
     }]
   });
-  return { rows, total }as Page;
+  return { rows, total } as Page;
+};
+
+export const getReservationsPaginated = async (
+  restaurantId: number, tableNumbers: number[] | undefined,
+  from: Date, to: Date, orderType: 'asc' | 'desc',
+  offset: number, limit: number
+): Promise<Page> => {
+  const client = getPrismaClient();
+  const args = {
+    where: {
+      from: {
+        gte: from
+      },
+      to: {
+        lte: to
+      },
+      table: {
+        restaurantId,
+        number: tableNumbers ? {
+          in: tableNumbers
+        } : undefined
+      }
+    }
+  };
+  const total = await client.reservation.count(args);
+  const rows = await client.reservation.findMany({
+    ...args,
+    take: limit,
+    skip: offset,
+    orderBy: [{
+      from: orderType
+    }]
+  });
+  return { rows, total } as Page;
 };

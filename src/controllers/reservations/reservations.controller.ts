@@ -5,14 +5,15 @@ import JWTPayload from "../../models/JWT.Payload.model";
 import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
 import {getFreeSlots} from "./utilities/free.slots.utilities";
 import {
-  validateCreateReservation,
+  validateCreateReservation, validateGetAllReservations,
   validateGetAvailableReservationSlots,
   validateGetTodayReservations
 } from "./validators/reservations.validator";
 import {
   createReservationByTableNumber,
-  getAllReservationsInDayPaginated
+  getAllReservationsInDayPaginated, getReservationsPaginated
 } from "../../DAL/reservation.dal";
+import {isAdmin} from "../../middleware/roleAuth";
 
 const router: Router = Router();
 
@@ -64,6 +65,30 @@ router.get('/today', (async (req, res, next) => {
     orderType = orderType.toLowerCase() as 'asc' | 'desc';
     validateGetTodayReservations(orderType, limit);
     const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit, orderType);
+    return res.status(200).send(result);
+  } catch (e) {
+    return ErrorResponseHandler(res, e);
+  }
+}));
+
+router.get('/', isAdmin, (async (req, res, next) => {
+  try {
+    const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
+    const limit = +req.query.limit || 10;
+    const offset = +req.query.offset || 0;
+    const from = new Date(req.query.from as string);
+    const to = new Date(req.query.to as string);
+    const tableNumbers = req.query.tableNumbers ?
+      (req.query.tableNumbers as string)
+        .split(',')
+        .map((n) => +n)
+      : undefined;
+    let orderType = (req.query.order || 'asc') as 'asc' | 'desc' ;
+    orderType = orderType.toLowerCase() as 'asc' | 'desc';
+    validateGetAllReservations(orderType, limit, tableNumbers);
+    const result = await getReservationsPaginated(
+      restaurantId, tableNumbers, from, to, orderType, offset, limit
+    );
     return res.status(200).send(result);
   } catch (e) {
     return ErrorResponseHandler(res, e);

@@ -40,3 +40,24 @@ export function validateGetTodayReservations(orderType: string, limit: number) {
     throw new BaseError(input);
   }
 }
+
+export function validateGetAllReservations(orderType: string, limit: number, tableNumbers: number[]) {
+  validateLimitPagination(limit);
+  if (orderType.toLowerCase() !== 'asc' && orderType.toLowerCase() !== 'desc') {
+    const input: ErrorInput = {
+      message: `'order' should be either 'asc' or 'desc'`,
+      code: 400,
+      name: `Query Parameters Error`
+    };
+    throw new BaseError(input);
+  }
+
+  if (tableNumbers && tableNumbers.includes(Number.NaN)) {
+    const input: ErrorInput = {
+      message: `invalid 'tableNumbers' value`,
+      code: 400,
+      name: `Query Parameters Error`
+    };
+    throw new BaseError(input);
+  }
+}
