@@ -145,3 +145,25 @@ export const getReservationsPaginated = async (
   });
   return { rows, total } as Page;
 };
+
+// restaurantId for extra security between accounts
+export const getReservationByIdAndRestaurantId = (id: number, restaurantId: number) => {
+  const client = getPrismaClient();
+  return client.reservation.findFirst({
+    where: {
+      id,
+      table: {
+        restaurantId
+      }
+    }
+  });
+};
+
+export const deleteReservationById = async (id: number) => {
+  const client = getPrismaClient();
+  return client.reservation.delete({
+    where: {
+      id
+    }
+  });
+};

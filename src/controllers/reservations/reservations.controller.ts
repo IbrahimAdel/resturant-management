@@ -5,12 +5,12 @@ import JWTPayload from "../../models/JWT.Payload.model";
 import {getTablesWithExactCapacityIncludingReservations} from "../../DAL/table.dal";
 import {getFreeSlots} from "./utilities/free.slots.utilities";
 import {
-  validateCreateReservation, validateGetAllReservations,
+  validateCreateReservation, validateDeleteReservation, validateGetAllReservations,
   validateGetAvailableReservationSlots,
   validateGetTodayReservations
 } from "./validators/reservations.validator";
 import {
-  createReservationByTableNumber,
+  createReservationByTableNumber, deleteReservationById,
   getAllReservationsInDayPaginated, getReservationsPaginated
 } from "../../DAL/reservation.dal";
 import {isAdmin} from "../../middleware/roleAuth";
@@ -90,6 +90,20 @@ router.get('/', isAdmin, (async (req, res, next) => {
       restaurantId, tableNumbers, from, to, orderType, offset, limit
     );
     return res.status(200).send(result);
+  } catch (e) {
+    return ErrorResponseHandler(res, e);
+  }
+}));
+
+router.delete('/:id', (async (req, res, next) => {
+  try {
+    const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
+    const id = +req.params.id;
+    await validateDeleteReservation(id, restaurantId);
+
+    const deletedReservation = await deleteReservationById(id);
+
+    return res.status(200).send(deletedReservation);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }
