@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import * as bcrypt from "bcrypt";
+import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient()
 
@@ -15,7 +15,7 @@ async function createDefaultRestaurant() {
   const salt = await bcrypt.genSalt(10);
   const hashedPass = await bcrypt.hash(password, salt);
   const email = 'ibrahim@gmail.com';
-  const exists = prisma.user.findUnique({
+  const exists = await prisma.user.findUnique({
     where: {
       email
     },
@@ -39,6 +39,7 @@ async function createDefaultRestaurant() {
     }
     const restaurant = await prisma.restaurant.create(restaurantData)
     console.log(`Created restaurant with id: ${restaurant.id}`)
+    console.log(`email: ${email}. password: ${password}`)
   }
 }
 
