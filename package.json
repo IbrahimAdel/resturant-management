@@ -7,9 +7,12 @@
     "lint": "eslint src --ext .ts",
     "prebuild": "npm run lint -- --fix",
     "build": "tsc",
-    "prestart": "npm run build && npx prisma migrate deploy",
+    "prestart": "npm run build && npx prisma migrate deploy && npx prisma db seed",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
   },
   "author": "Ibrahim Hussein",
   "license": "ISC",
@@ -31,6 +34,8 @@
     "@typescript-eslint/eslint-plugin": "^5.20.0",
     "@typescript-eslint/parser": "5.20.0",
     "eslint": "8.13.0",
-    "prisma": "3.12.0"
+    "prisma": "3.12.0",
+    "ts-node": "9.1.1",
+    "typescript": "4.1.3"
   }
 }
