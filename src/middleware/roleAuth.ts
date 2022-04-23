@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express';
+import {NextFunction, Request, Response} from 'express';
 import {getUserRole} from '../caching/caching.service';
 import JWTPayload from '../models/JWT.Payload.model';
 

@@ -1,12 +1,16 @@
 import {getMinimumCapacity, getTablesIdsWithExactCapacity} from "../../DAL/table.dal";
 import {
-  validateCreateReservation, validateDeleteReservation, validateGetAllReservations,
+  validateCreateReservation,
+  validateDeleteReservation,
+  validateGetAllReservations,
   validateGetAvailableReservationSlots,
   validateGetTodayReservations
 } from "./validators/reservations.validator";
 import {TimeSlot} from "../../models/TimeSlot.model";
 import {
-  createReservationByTableNumber, deleteReservationById, getAllReservationsInDayPaginated,
+  createReservationByTableNumber,
+  deleteReservationById,
+  getAllReservationsInDayPaginated,
   getAllReservationsInTableWithCapacitySortedByFrom,
   getReservationsPaginated
 } from "../../DAL/reservation.dal";

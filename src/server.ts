@@ -6,7 +6,7 @@ import AuthController from './modules/auth/auth.controller';
 import TablesController from './modules/tables/tables.controller';
 import ReservationsController from './modules/reservations/reservations.controller';
 import UsersController from "./modules/users/users.controller";
-import {RoleMiddleware, JWTMiddleware} from './middleware';
+import {JWTMiddleware, RoleMiddleware} from './middleware';
 
 const app = express();
 

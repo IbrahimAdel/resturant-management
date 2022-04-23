@@ -1,9 +1,5 @@
 import {Router} from "express";
 import JWTPayload from "../../models/JWT.Payload.model";
-import CreateUserDTO from "./DTOs/create.user.dto";
-import {validateCreateUser} from "../tables/validators/validator";
-import bcrypt from "bcrypt";
-import {createNonAdminUser, getAllUsers} from "../../DAL/user.dal";
 import ErrorResponseHandler from "../../errors/error.response.handler";
 import * as UsersService from "./users.service";
 

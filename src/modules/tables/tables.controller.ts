@@ -1,11 +1,8 @@
 import {Router} from 'express';
 import JWTPayload from '../../models/JWT.Payload.model';
-import {validateCreateTable, validateDeleteTable} from './validators/validator';
 import ErrorResponseHandler from '../../errors/error.response.handler';
-import CreateTableDto from './DTOs/create.table.dto';
-import {createTable, deleteTable} from '../../DAL/table.dal';
 import * as TablesService from './tables.service';
-import {createTableInRestaurant} from "./tables.service";
+
 const router: Router = Router();
 router.get('/', (async (req, res) => {
   try {
