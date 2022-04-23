@@ -1,7 +1,7 @@
 import * as dotenv from 'dotenv'
 import express from 'express';
-import {getRedisClient} from './redis/RedisHandler';
-import {getPrismaClient} from './orm/PrismaHandler';
+import {closeRedisConnection, getRedisClient} from './redis/RedisHandler';
+import {closePrismaConnection, getPrismaClient} from './orm/PrismaHandler';
 import AuthController from './modules/auth/auth.controller';
 import TablesController from './modules/tables/tables.controller';
 import ReservationsController from './modules/reservations/reservations.controller';
@@ -19,7 +19,7 @@ app.use('/reservations', JWTMiddleware.verifyToken, ReservationsController);
 app.use('/users', JWTMiddleware.verifyToken, UsersController);
 dotenv.config() // Load the environment variables
 
-app.listen(port, async () => {
+const server = app.listen(port, async () => {
   const redis = getRedisClient();
   redis.on('connect', () => {
     // tslint:disable-next-line:no-console
@@ -45,3 +45,10 @@ app.listen(port, async () => {
   // tslint:disable-next-line:no-console
   console.log(`server started at http://localhost:${port}`);
 });
+
+server.on('close', async () => {
+  await closePrismaConnection();
+  await closeRedisConnection();
+})
+
+export default server;

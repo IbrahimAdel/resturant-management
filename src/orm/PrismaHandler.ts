@@ -12,3 +12,9 @@ export const getPrismaClient = () => {
   });
   return prismaClient;
 };
+
+export const closePrismaConnection = () => {
+  if (prismaClient) {
+    return prismaClient.$disconnect();
+  }
+}

@@ -30,7 +30,7 @@ router.post('/', (async (req, res) => {
     const {tableNumber} = req.body;
     const authUser = res.locals.AUTH_USER as JWTPayload;
     const {restaurantId} = authUser;
-    const createdReservation = ReservationService
+    const createdReservation = await ReservationService
       .createReservation(restaurantId, +tableNumber, from, to)
     return res.status(200).send(createdReservation);
   } catch (e) {

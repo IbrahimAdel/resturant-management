@@ -1,5 +1,5 @@
 import {BaseError, ErrorInput} from '../errors/errros';
-import {getEndOfTheDay} from '../modules/reservations/utilities/date.utilities';
+import {getEndOfTheDay, getStartOfTheDay} from '../modules/reservations/utilities/date.utilities';
 
 export function validateFromAndToDates(from: Date, to: Date) {
   if (!from.valueOf()) {
@@ -31,6 +31,15 @@ export function validateFromAndToDates(from: Date, to: Date) {
   if (to <= from) {
     const input: ErrorInput = {
       message: `'to' has to be after 'from'`,
+      code: 400,
+      name: `Invalid Date Error`
+    };
+    throw new BaseError(input);
+  }
+
+  if (from < getStartOfTheDay(from)) {
+    const input: ErrorInput = {
+      message: `'from' has to be in working hours`,
       code: 400,
       name: `Invalid Date Error`
     };

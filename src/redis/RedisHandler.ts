@@ -11,3 +11,9 @@ export const getRedisClient = () => {
   });
   return redis;
 };
+
+export const closeRedisConnection = () => {
+  if (redis) {
+    return redis.disconnect();
+  }
+}
