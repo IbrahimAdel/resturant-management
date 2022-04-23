@@ -26,7 +26,7 @@ async function createDefaultRestaurant() {
   if (!exists) {
     const restaurantData: Prisma.RestaurantCreateArgs = {
       data: {
-        name: 'McDonalds 2.0 Cuz 1.0 Sucks',
+        name: 'McDonald\'s 2.0 Cuz 1.0 Sucks',
         users: {
           create: {
             email: 'ibrahim@gmail.com',
