@@ -1,5 +1,5 @@
 datasource db {
-  url      = "postgresql://postgres:postgres@db:5432/sary_assignment?schema=public&connection_limit=40"
+  url      = env("DB_URL")
   provider = "postgresql"
 }
 

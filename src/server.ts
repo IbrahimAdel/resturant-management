@@ -1,3 +1,4 @@
+import * as dotenv from 'dotenv'
 import express from 'express';
 import { getRedisClient } from './redis/RedisHandler';
 import { getPrismaClient } from './orm/PrismaHandler';
@@ -14,6 +15,7 @@ const port = 8080;
 app.use('/auth', AuthController);
 app.use('/admin', JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, AdminController);
 app.use('/reservations', JWTMiddleware.verifyToken, ReservationsController);
+dotenv.config() // Load the environment variables
 
 app.listen(port, async () => {
   const redis = getRedisClient();

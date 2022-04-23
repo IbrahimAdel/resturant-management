@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import { JWT_SECRET } from '../../config/secrets';
 import { getPrismaClient } from '../../orm/PrismaHandler';
 import { createRestaurantWithAdmin, getRestaurantWithAdmin } from '../../DAL/restaurant.dal';
 
 const router: Router = Router();
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', (async (req, res, next) => {
   try {
