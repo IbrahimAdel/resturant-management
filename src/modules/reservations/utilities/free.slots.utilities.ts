@@ -11,7 +11,7 @@ export function getFreeSlots(
   // reservations in tables should be sorted by 'from' date.
   const timeSlots = allReservations.map((r) => reservationToTimeSlot(r));
   const blockingIntersections = findBlockingIntersections(timeSlots, tableIds);
-  return generateAvailableTimeSlots(blockingIntersections, tableIds.length, from, to);
+  return generateAvailableTimeSlots(blockingIntersections, from, to);
 }
 
 function findBlockingIntersections(reservations: TimeSlot[], tableIds: number[]): TimeSlot[] {
@@ -50,7 +50,7 @@ function reservationToTimeSlot({from, to, tableId}: Reservation): TimeSlot {
   };
 }
 
-function generateAvailableTimeSlots(blockingIntersection: TimeSlot[], tablesCount: number, from: Date, to: Date) {
+function generateAvailableTimeSlots(blockingIntersection: TimeSlot[], from: Date, to: Date) {
   const slots: TimeSlot[] = [];
   const startOfDay = getStartOfTheDay(from);
   const startingTime = from > startOfDay ? from : startOfDay;
@@ -59,12 +59,16 @@ function generateAvailableTimeSlots(blockingIntersection: TimeSlot[], tablesCoun
     // if there is some time between intersections, we add an available slot
     if (intersection.from > slot.from) {
       slot.to = intersection.from;
-      slots.push(slot);
+      if (slot.to.valueOf() !== slot.from.valueOf()) {
+        slots.push(slot);
+      }
     }
     slot = {from: intersection.to};
   }
   const endOfDay = getEndOfTheDay(from);
   slot.to = to < endOfDay ? to : endOfDay;
-  slots.push(slot);
+  if (slot.to.valueOf() !== slot.from.valueOf()) {
+    slots.push(slot);
+  }
   return slots;
 }

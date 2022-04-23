@@ -23,7 +23,7 @@ router.post('/', (async (req, res) => {
       capacity = 0,
     } = req.body;
     const authUser = res.locals.AUTH_USER as JWTPayload;
-    const createdTable = await TablesService.createTableInRestaurant(authUser.restaurantId, capacity, tableNumber);
+    const createdTable = await TablesService.createTableInRestaurant(authUser.restaurantId, tableNumber, capacity);
     return res.status(200).send(createdTable);
   } catch (e) {
     return ErrorResponseHandler(res, e);
