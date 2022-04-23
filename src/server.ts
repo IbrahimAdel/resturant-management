@@ -3,7 +3,7 @@ import express from 'express';
 import { getRedisClient } from './redis/RedisHandler';
 import { getPrismaClient } from './orm/PrismaHandler';
 import AuthController from './controllers/auth/auth.controller';
-import AdminController from './controllers/admin/admin.controller';
+import TablesController from './controllers/tables/tables.controller';
 import ReservationsController from './controllers/reservations/reservations.controller';
 import { RoleMiddleware, JWTMiddleware } from './middleware';
 
@@ -13,7 +13,7 @@ app.use(express.json());
 const port = 8080;
 
 app.use('/auth', AuthController);
-app.use('/admin', JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, AdminController);
+app.use('/tables', JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, TablesController);
 app.use('/reservations', JWTMiddleware.verifyToken, ReservationsController);
 dotenv.config() // Load the environment variables
 

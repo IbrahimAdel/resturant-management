@@ -1,7 +1,16 @@
 import { getPrismaClient } from '../orm/PrismaHandler';
-import CreateTableDto from '../controllers/admin/DTOs/create.table.dto';
+import CreateTableDto from '../controllers/tables/DTOs/create.table.dto';
 import { getEndOfTheDay, getStartOfTheDay } from '../controllers/reservations/utilities/date.utilities';
 
+
+export const getAllTablesForRestaurant = (restaurantId: number) => {
+  const client = getPrismaClient();
+  return client.table.findMany({
+    where: {
+      restaurantId
+    }
+  })
+};
 export const getTableByNumberAndRestaurantId = async (tableNumber: number, restaurantId: number) => {
   const client = getPrismaClient();
   return client.table.findUnique({

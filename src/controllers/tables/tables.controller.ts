@@ -1,43 +1,25 @@
 import { Router } from 'express';
 import bcrypt from 'bcrypt';
-import CreateUserDTO from './DTOs/create.user.dto';
+import CreateUserDTO from '../users/DTOs/create.user.dto';
 import JWTPayload from '../../models/JWT.Payload.model';
-import { createNonAdminUser } from '../../DAL/user.dal';
-import { validateCreateTable, validateCreateUser, validateDeleteTable } from './validators/validator';
+import { validateCreateTable, validateDeleteTable } from './validators/validator';
 import ErrorResponseHandler from '../../errors/error.response.handler';
 import CreateTableDto from './DTOs/create.table.dto';
-import { createTable, deleteTable } from '../../DAL/table.dal';
+import {createTable, deleteTable, getAllTablesForRestaurant} from '../../DAL/table.dal';
 
 const router: Router = Router();
-
-router.post('/users', (async (req, res, next) => {
+router.get('/', (async (req, res) => {
   try {
-    const {
-      email = '',
-      password = '',
-      name = '',
-      number: userNumber = ''
-    } = req.body;
     const authUser = res.locals.AUTH_USER as JWTPayload;
-    const userDTO: CreateUserDTO = {
-      name,
-      email,
-      password,
-      restaurantId: authUser.restaurantId,
-      number: userNumber
-    };
-    await validateCreateUser(userDTO);
-    const salt = await bcrypt.genSalt(10);
-    userDTO.password = await bcrypt.hash(password, salt);
-    const createdUser = await createNonAdminUser(userDTO);
-    delete createdUser.password;
-    return res.status(200).send(createdUser);
+    const { restaurantId } = authUser;
+    const tables = await getAllTablesForRestaurant(restaurantId)
+    return res.status(200).send(tables);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }
 }));
 
-router.post('/tables', (async (req, res, next) => {
+router.post('/', (async (req, res, next) => {
   try {
     const {
       number: tableNumber = 0,
@@ -57,7 +39,7 @@ router.post('/tables', (async (req, res, next) => {
   }
 }));
 
-router.delete('/tables/:tableNumber', (async (req, res, next) => {
+router.delete('/:tableNumber', (async (req, res, next) => {
   try {
     const {
       tableNumber

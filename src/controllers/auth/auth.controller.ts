@@ -18,7 +18,6 @@ router.post('/login', (async (req, res, next) => {
       });
     if (dbUser) {
       const JWT_SECRET = process.env.JWT_SECRET;
-      console.log(JWT_SECRET)
       const matchedPassword = await bcrypt.compare(password, dbUser.password);
       if (matchedPassword) {
         const user = { email, restaurantId: dbUser.restaurantId };

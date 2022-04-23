@@ -1,4 +1,4 @@
-import CreateUserDTO from '../DTOs/create.user.dto';
+import CreateUserDTO from '../../users/DTOs/create.user.dto';
 import { BaseError, ErrorInput } from '../../../errors/errros';
 import { getUserIdByEmail } from '../../../DAL/user.dal';
 import CreateTableDto from '../DTOs/create.table.dto';
