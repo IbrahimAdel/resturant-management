@@ -19,7 +19,7 @@ export async function getAvailableReservationSlotsToday(restaurantId: number, re
   const tableIds = await getTablesIdsWithExactCapacity(restaurantId, minimumCapacity);
   const timeSlot: TimeSlot = {from, to, tableIds: []};
   const allReservations = await getAllReservationsInTableWithCapacitySortedByFrom(tableIds, timeSlot);
-  return  getFreeSlots(allReservations, tableIds, from, to);
+  return getFreeSlots(allReservations, tableIds, from, to);
 }
 
 export async function createReservation(restaurantId: number, tableNumber: number, from: Date, to: Date) {
