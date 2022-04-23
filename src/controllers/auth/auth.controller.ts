@@ -49,7 +49,6 @@ router.post('/register', (async (req, res, next) => {
     const dbUser = await getRestaurantWithAdmin(id);
     return res.status(200).send(dbUser);
   } catch (e) {
-    console.error(e)
     return ErrorResponseHandler(res, e);
   }
 }));
