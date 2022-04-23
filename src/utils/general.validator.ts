@@ -59,3 +59,8 @@ export function validateLimitPagination(limit: number) {
     throw new BaseError(input);
   }
 }
+
+export function validateEmail(email: string) {
+  const regex = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}/;
+  return regex.test(email);
+}

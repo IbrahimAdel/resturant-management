@@ -4,6 +4,7 @@ import { getUserIdByEmail } from '../../../DAL/user.dal';
 import CreateTableDto from '../DTOs/create.table.dto';
 import { getTableByNumberAndRestaurantId } from '../../../DAL/table.dal';
 import { getFutureReservationCountForTable } from '../../../DAL/reservation.dal';
+import {validateEmail} from "../../../utils/general.validator";
 
 export async function validateCreateUser(user: CreateUserDTO) {
   if (user.password.trim().length < 6) {
@@ -21,6 +22,16 @@ export async function validateCreateUser(user: CreateUserDTO) {
       message: 'user number should consist only of numbers and be of 4 length',
       code: 400,
       name: 'User Number Error'
+    };
+    throw new BaseError(input);
+  }
+
+  const isValid = validateEmail(user.email);
+  if (!isValid) {
+    const input: ErrorInput = {
+      message: 'invalid Email',
+      code: 400,
+      name: 'Invalid Email Error'
     };
     throw new BaseError(input);
   }
@@ -76,7 +87,6 @@ export async function validateDeleteTable(tableNumber: number, restaurantId: num
     };
     throw new BaseError(input);
   }
-  // TODO no feature reservation
   const futureReservationsCount = await getFutureReservationCountForTable(table.id);
   if (futureReservationsCount > 0) {
     const input: ErrorInput = {

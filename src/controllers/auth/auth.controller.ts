@@ -3,6 +3,8 @@ import * as jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { getPrismaClient } from '../../orm/PrismaHandler';
 import { createRestaurantWithAdmin, getRestaurantWithAdmin } from '../../DAL/restaurant.dal';
+import {validateRegister} from "./validators/auth.validator";
+import ErrorResponseHandler from "../../errors/error.response.handler";
 
 const router: Router = Router();
 
@@ -28,28 +30,27 @@ router.post('/login', (async (req, res, next) => {
     }
     return res.status(403).send('Unauthorized');
   } catch (e) {
-    console.log(e)
-    return res.status(500).send('error in the server');
+    return ErrorResponseHandler(res, e);
   }
 }));
 
 router.post('/register', (async (req, res, next) => {
   try {
     const {
-      username,
+      email,
       password = '',
+      name = '',
       restaurantName = ''
     } = req.body;
-    if (password.trim().length < 6) {
-      return res.status(500).send('password should be more than 6 characters');
-    }
+    await validateRegister(password, email);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    const { id } = await createRestaurantWithAdmin(restaurantName, username, hashedPassword);
+    const { id } = await createRestaurantWithAdmin(restaurantName, name, email, hashedPassword);
     const dbUser = await getRestaurantWithAdmin(id);
     return res.status(200).send(dbUser);
   } catch (e) {
-    return res.status(500).send('error in the server');
+    console.error(e)
+    return ErrorResponseHandler(res, e);
   }
 }));
 

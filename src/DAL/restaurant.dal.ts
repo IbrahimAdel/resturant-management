@@ -20,16 +20,20 @@ export const getRestaurantWithAdmin = async (id: number) => {
   });
 };
 
-export const createRestaurantWithAdmin = async (restaurantName: string, username: string, hashedPassword: string) => await getPrismaClient().restaurant
-  .create({
-    data: {
-      name: restaurantName,
-      users: {
-        create: {
-          email: username,
-          password: hashedPassword,
-          role: 'Admin'
+export const createRestaurantWithAdmin = async (restaurantName: string, name: string, email: string, hashedPassword: string) => {
+  const client = await getPrismaClient();
+  return client.restaurant
+    .create({
+      data: {
+        name: restaurantName,
+        users: {
+          create: {
+            email,
+            password: hashedPassword,
+            role: 'Admin',
+            name
+          }
         }
       }
-    }
-  });
+    });
+}

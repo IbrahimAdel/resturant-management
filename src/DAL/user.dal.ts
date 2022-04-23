@@ -53,3 +53,15 @@ export const getUserIdByEmail = (email: string) => {
       }
     }).then((user) => user?.id);
 };
+
+export const isEmailRegistered = (email: string) => {
+  const client = getPrismaClient();
+  return client.user.findUnique({
+    where: {
+      email
+    },
+    select: {
+      id: true
+    }
+  }).then((user) => (!!user))
+}
