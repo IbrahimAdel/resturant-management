@@ -1,6 +1,7 @@
-import { getPrismaClient } from '../orm/PrismaHandler';
-import { getEndOfTheDay, getStartOfTheDay } from '../controllers/reservations/utilities/date.utilities';
-import { Page } from '../models/Page.model';
+import {getPrismaClient} from '../orm/PrismaHandler';
+import {getEndOfTheDay, getStartOfTheDay} from '../controllers/reservations/utilities/date.utilities';
+import {Page} from '../models/Page.model';
+import {TimeSlot} from "../models/TimeSlot.model";
 
 export const getFutureReservationCountForTable = (tableId: number) => {
   const client = getPrismaClient();
@@ -22,6 +23,47 @@ export const getFutureReservationCountForTable = (tableId: number) => {
     }
   });
 };
+
+export const getAllReservationsInTableWithCapacitySortedByFrom = (tableIds: number[], timeSlot: TimeSlot) => {
+  const client = getPrismaClient();
+  const {from, to} = timeSlot;
+  return client.reservation.findMany({
+    orderBy: [{from: 'asc'}],
+    where: {
+      tableId: {
+        in: tableIds
+      },
+      OR: [
+        {
+          from: {
+            gt: from,
+            lt: to
+          }
+        },
+        {
+          to: {
+            lt: to,
+            gt: from
+          }
+        },
+        {
+          from: {
+            lte: from
+          },
+          to: {
+            gte: to
+          }
+        }
+      ],
+      from: {
+        gte: getStartOfTheDay(from)
+      },
+      to: {
+        lte: getEndOfTheDay(from)
+      }
+    }
+  })
+}
 
 export const countReservationsInTimeSlot = async (tableNumber: number, restaurantId: number, from: Date, to: Date) => {
   const client = getPrismaClient();
@@ -105,7 +147,7 @@ export const getAllReservationsInDayPaginated = async (date: Date, restaurantId:
       from: orderType
     }]
   });
-  return { rows, total } as Page;
+  return {rows, total} as Page;
 };
 
 export const getReservationsPaginated = async (
@@ -143,7 +185,7 @@ export const getReservationsPaginated = async (
       from: orderType
     }]
   });
-  return { rows, total } as Page;
+  return {rows, total} as Page;
 };
 
 // restaurantId for extra security between accounts

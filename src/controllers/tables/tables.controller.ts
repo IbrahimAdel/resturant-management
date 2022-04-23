@@ -1,8 +1,6 @@
-import { Router } from 'express';
-import bcrypt from 'bcrypt';
-import CreateUserDTO from '../users/DTOs/create.user.dto';
+import {Router} from 'express';
 import JWTPayload from '../../models/JWT.Payload.model';
-import { validateCreateTable, validateDeleteTable } from './validators/validator';
+import {validateCreateTable, validateDeleteTable} from './validators/validator';
 import ErrorResponseHandler from '../../errors/error.response.handler';
 import CreateTableDto from './DTOs/create.table.dto';
 import {createTable, deleteTable, getAllTablesForRestaurant} from '../../DAL/table.dal';
@@ -11,7 +9,7 @@ const router: Router = Router();
 router.get('/', (async (req, res) => {
   try {
     const authUser = res.locals.AUTH_USER as JWTPayload;
-    const { restaurantId } = authUser;
+    const {restaurantId} = authUser;
     const tables = await getAllTablesForRestaurant(restaurantId)
     return res.status(200).send(tables);
   } catch (e) {

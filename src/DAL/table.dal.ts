@@ -1,6 +1,5 @@
-import { getPrismaClient } from '../orm/PrismaHandler';
+import {getPrismaClient} from '../orm/PrismaHandler';
 import CreateTableDto from '../controllers/tables/DTOs/create.table.dto';
-import { getEndOfTheDay, getStartOfTheDay } from '../controllers/reservations/utilities/date.utilities';
 
 
 export const getAllTablesForRestaurant = (restaurantId: number) => {
@@ -61,46 +60,14 @@ export const getMinimumCapacity = (restaurantId: number, minimumSeats: number) =
   }).then((res) => res._min.capacity);
 };
 
-export const getTablesWithExactCapacityIncludingReservations = async (restaurantId: number, capacity: number, from: Date, to: Date) => {
+export const getTablesIdsWithExactCapacity = async (restaurantId: number, capacity: number) => {
   const client = getPrismaClient();
   return client.table.findMany({
     where: {
       capacity
     },
-    include: {
-      reservations: {
-        orderBy: [{ from: 'asc' }],
-        where: {
-          OR: [
-            {
-              from: {
-                gt: from,
-                lt: to
-              }
-            },
-            {
-              to: {
-                lt: to,
-                gt: from
-              }
-            },
-            {
-              from: {
-                lte: from
-              },
-              to: {
-                gte: to
-              }
-            }
-          ],
-          from: {
-            gte: getStartOfTheDay(from)
-          },
-          to: {
-            lte: getEndOfTheDay(from)
-          }
-        }
-      },
+    select: {
+      id: true
     }
-  });
+  }).then((tables) => (tables.map(t => t.id)));
 };

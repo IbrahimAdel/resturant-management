@@ -1,4 +1,4 @@
 export interface Page {
-  rows: any[];
+  rows: never[];
   total: number;
 }

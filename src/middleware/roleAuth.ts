@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { getUserRole } from '../caching/caching.service';
+import {Request, Response, NextFunction} from 'express';
+import {getUserRole} from '../caching/caching.service';
 import JWTPayload from '../models/JWT.Payload.model';
 
 export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {

@@ -1,4 +1,4 @@
-import { getPrismaClient } from '../orm/PrismaHandler';
+import {getPrismaClient} from '../orm/PrismaHandler';
 import CreateUserDTO from '../controllers/users/DTOs/create.user.dto';
 
 export const getAllUsers = (restaurantId: number) => {

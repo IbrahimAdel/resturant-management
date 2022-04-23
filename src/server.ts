@@ -1,12 +1,12 @@
 import * as dotenv from 'dotenv'
 import express from 'express';
-import { getRedisClient } from './redis/RedisHandler';
-import { getPrismaClient } from './orm/PrismaHandler';
+import {getRedisClient} from './redis/RedisHandler';
+import {getPrismaClient} from './orm/PrismaHandler';
 import AuthController from './controllers/auth/auth.controller';
 import TablesController from './controllers/tables/tables.controller';
 import ReservationsController from './controllers/reservations/reservations.controller';
 import UsersController from "./controllers/users/users.controller";
-import { RoleMiddleware, JWTMiddleware } from './middleware';
+import {RoleMiddleware, JWTMiddleware} from './middleware';
 
 const app = express();
 

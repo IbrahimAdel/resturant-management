@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import {NextFunction, Request, Response} from 'express';
 import * as jwt from 'jsonwebtoken';
 import JWTPayload from '../models/JWT.Payload.model';
 
@@ -22,4 +22,4 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-export { verifyToken };
+export {verifyToken};

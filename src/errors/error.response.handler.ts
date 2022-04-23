@@ -1,7 +1,7 @@
-import { Response } from 'express';
-import { BaseError } from './errros';
+import {Response} from 'express';
+import {BaseError} from './errros';
 
-export default function (res: Response, err: any) {
+export default function (res: Response, err: Error | BaseError) {
   if (err instanceof BaseError) {
     return res.status(err.code).send({
       message: err.message,
@@ -10,5 +10,5 @@ export default function (res: Response, err: any) {
     });
   }
   console.error(err);
-  return res.status(500).send({ message: 'internal server error' });
+  return res.status(500).send({message: 'internal server error'});
 }

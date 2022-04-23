@@ -1,5 +1,5 @@
-import { getRedisClient } from '../redis/RedisHandler';
-import { getUserRoleFromDB } from '../DAL/user.dal';
+import {getRedisClient} from '../redis/RedisHandler';
+import {getUserRoleFromDB} from '../DAL/user.dal';
 
 const SIX_HOURS = 60 * 60 * 6;
 

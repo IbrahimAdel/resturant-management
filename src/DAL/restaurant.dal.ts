@@ -1,4 +1,4 @@
-import { getPrismaClient } from '../orm/PrismaHandler';
+import {getPrismaClient} from '../orm/PrismaHandler';
 
 export const getRestaurantWithAdmin = async (id: number) => {
   const client = getPrismaClient();
