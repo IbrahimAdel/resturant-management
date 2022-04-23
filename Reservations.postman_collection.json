@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "e5c923d8-2302-448b-8f65-097ba3b6eda3",
+		"name": "Sary",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ibrahim2@gmail.com\",\n    \"password\": \"123456\",\n    \"name\": \"ibrahim Hussein\",\n    \"restaurantName\": \"McDonalds 2.0 Cuz 1.0 Sucks\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/register",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const accessToken = pm.response.json().accessToken",
+									"    pm.environment.set('accessToken', accessToken);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ibrahim@gmail.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/auth/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "tables",
+			"item": [
+				{
+					"name": "get tables",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/tables",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create table",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"number\": 4,\n    \"capacity\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/tables",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete table",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/tables/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"tables",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "reservations",
+			"item": [
+				{
+					"name": "available reservations times",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reservations/available?from=2022-04-23T11:16:00&to=2022-04-23T23:59:59&requiredSeats=3",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reservations",
+								"available"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2022-04-23T11:16:00"
+								},
+								{
+									"key": "to",
+									"value": "2022-04-23T23:59:59"
+								},
+								{
+									"key": "requiredSeats",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get today's reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reservations/today?offset=0&limit=200&order=asc",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reservations",
+								"today"
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "limit",
+									"value": "200"
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"description": "asc | desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all reservations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/reservations?from=2022-04-22T11:16:00&to=2022-04-27T23:59:59&limit=10&offset=0&order=asc",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reservations"
+							],
+							"query": [
+								{
+									"key": "from",
+									"value": "2022-04-22T11:16:00",
+									"description": "start of the current working day if not provided"
+								},
+								{
+									"key": "to",
+									"value": "2022-04-27T23:59:59",
+									"description": "end of the current working day if not provided"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "tableNumbers",
+									"value": "1,2",
+									"description": "1,2,3,4,5...n",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"description": "asc | desc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create reservation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"from\": \"2022-04-23 20:00:00.000\",\n    \"to\": \"2022-04-23 20:17:00.000\",\n    \"tableNumber\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reservations",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete reservation",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/reservations/1",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"reservations",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "users",
+			"item": [
+				{
+					"name": "get all users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ibrahim2@gmail.com\",\n    \"password\": \"123456\",\n    \"name\": \"ibrahim 2\",\n    \"number\": \"1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/users",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
