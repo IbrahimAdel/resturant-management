@@ -17,7 +17,7 @@ The system consists of 4 modules:
 **Server:** Node, Express, TypeScript, Prisma, Postgresql, Redis, Docker, and Docker compose
 
 # API References
-both postman collection and environment are included in the root of this repository.
+both postman collection and environment are included in the root of this repository. After login the token will be updated automatically in the environment.
 ## Installation
 All you have to do is run the following command 
 ```bash
