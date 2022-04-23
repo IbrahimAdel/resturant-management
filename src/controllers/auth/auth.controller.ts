@@ -6,7 +6,6 @@ import { createRestaurantWithAdmin, getRestaurantWithAdmin } from '../../DAL/res
 
 const router: Router = Router();
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 router.post('/login', (async (req, res, next) => {
   try {
@@ -18,6 +17,8 @@ router.post('/login', (async (req, res, next) => {
         }
       });
     if (dbUser) {
+      const JWT_SECRET = process.env.JWT_SECRET;
+      console.log(JWT_SECRET)
       const matchedPassword = await bcrypt.compare(password, dbUser.password);
       if (matchedPassword) {
         const user = { email, restaurantId: dbUser.restaurantId };
@@ -28,6 +29,7 @@ router.post('/login', (async (req, res, next) => {
     }
     return res.status(403).send('Unauthorized');
   } catch (e) {
+    console.log(e)
     return res.status(500).send('error in the server');
   }
 }));

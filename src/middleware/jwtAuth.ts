@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import JWTPayload from '../models/JWT.Payload.model';
 
-const JWT_SECRET = process.env.JWT_SECRET;
 
 async function verifyToken(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
@@ -11,6 +10,7 @@ async function verifyToken(req: Request, res: Response, next: NextFunction) {
     if (!accessToken) {
       throw new Error('unauthorized');
     }
+    const JWT_SECRET = process.env.JWT_SECRET;
     res.locals.AUTH_USER = await jwt.verify(accessToken, JWT_SECRET) as JWTPayload;
 
     next();
