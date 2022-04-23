@@ -1,24 +1,8 @@
 import {Router} from 'express';
 import ErrorResponseHandler from '../../errors/error.response.handler';
-import {getMinimumCapacity, getTablesIdsWithExactCapacity,} from '../../DAL/table.dal';
 import JWTPayload from '../../models/JWT.Payload.model';
-import {getFreeSlots} from './utilities/free.slots.utilities';
-import {
-  validateCreateReservation,
-  validateDeleteReservation,
-  validateGetAllReservations,
-  validateGetAvailableReservationSlots,
-  validateGetTodayReservations
-} from './validators/reservations.validator';
-import {
-  createReservationByTableNumber,
-  deleteReservationById,
-  getAllReservationsInDayPaginated,
-  getAllReservationsInTableWithCapacitySortedByFrom,
-  getReservationsPaginated
-} from '../../DAL/reservation.dal';
 import {isAdmin} from '../../middleware/roleAuth';
-import {TimeSlot} from "../../models/TimeSlot.model";
+import * as ReservationService from "./reservations.service";
 
 const router: Router = Router();
 
@@ -31,12 +15,8 @@ router.get('/available', (async (req, res) => {
     const {restaurantId} = authUser;
 
     // minimumCapacity is null if there is no match from the requiredSeats
-    const minimumCapacity = await getMinimumCapacity(restaurantId, +requiredSeats);
-    validateGetAvailableReservationSlots(from, to, +requiredSeats, minimumCapacity);
-    const tableIds = await getTablesIdsWithExactCapacity(restaurantId, minimumCapacity);
-    const timeSlot: TimeSlot = {from, to, tableIds: []};
-    const allReservations = await getAllReservationsInTableWithCapacitySortedByFrom(tableIds, timeSlot);
-    const slots = getFreeSlots(allReservations, tableIds, from, to);
+    const slots = await ReservationService
+      .getAvailableReservationSlotsToday(restaurantId, requiredSeats, from, to)
     return res.status(200).send(slots);
   } catch (e) {
     return ErrorResponseHandler(res, e);
@@ -50,10 +30,8 @@ router.post('/', (async (req, res) => {
     const {tableNumber} = req.body;
     const authUser = res.locals.AUTH_USER as JWTPayload;
     const {restaurantId} = authUser;
-
-    // minimumCapacity is null if there is no match from the requiredSeats
-    await validateCreateReservation(from, to, tableNumber, restaurantId);
-    const createdReservation = await createReservationByTableNumber(tableNumber, restaurantId, from, to);
+    const createdReservation = ReservationService
+      .createReservation(restaurantId, +tableNumber, from, to)
     return res.status(200).send(createdReservation);
   } catch (e) {
     return ErrorResponseHandler(res, e);
@@ -62,15 +40,14 @@ router.post('/', (async (req, res) => {
 
 router.get('/today', (async (req, res) => {
   try {
-    const today = new Date();
     const {restaurantId} = res.locals.AUTH_USER as JWTPayload;
     const limit = +req.query.limit || 10;
     const offset = +req.query.offset || 0;
     let orderType = (req.query.order || 'asc') as 'asc' | 'desc';
     orderType = orderType.toLowerCase() as 'asc' | 'desc';
-    validateGetTodayReservations(orderType, limit);
-    const result = await getAllReservationsInDayPaginated(today, restaurantId, offset, limit, orderType);
-    return res.status(200).send(result);
+    const reservations = await ReservationService
+      .getReservationsTodayPaginated(orderType, restaurantId, limit, offset);
+    return res.status(200).send(reservations);
   } catch (e) {
     return ErrorResponseHandler(res, e);
   }
@@ -90,8 +67,8 @@ router.get('/', isAdmin, (async (req, res) => {
       : undefined;
     let orderType = (req.query.order || 'asc') as 'asc' | 'desc';
     orderType = orderType.toLowerCase() as 'asc' | 'desc';
-    validateGetAllReservations(orderType, limit, tableNumbers);
-    const result = await getReservationsPaginated(restaurantId, tableNumbers, from, to, orderType, offset, limit);
+    const result = await ReservationService
+      .getReservationsPaginatedForAdmin(orderType, restaurantId, limit, offset, from, to, tableNumbers);
     return res.status(200).send(result);
   } catch (e) {
     return ErrorResponseHandler(res, e);
@@ -102,9 +79,7 @@ router.delete('/:id', (async (req, res) => {
   try {
     const {restaurantId} = res.locals.AUTH_USER as JWTPayload;
     const id = +req.params.id;
-    await validateDeleteReservation(id, restaurantId);
-
-    const deletedReservation = await deleteReservationById(id);
+    const deletedReservation = await ReservationService.deleteReservation(id, restaurantId)
 
     return res.status(200).send(deletedReservation);
   } catch (e) {
