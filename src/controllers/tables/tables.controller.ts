@@ -19,7 +19,7 @@ router.get('/', (async (req, res) => {
   }
 }));
 
-router.post('/', (async (req, res, next) => {
+router.post('/', (async (req, res) => {
   try {
     const {
       number: tableNumber = 0,
@@ -39,7 +39,7 @@ router.post('/', (async (req, res, next) => {
   }
 }));
 
-router.delete('/:tableNumber', (async (req, res, next) => {
+router.delete('/:tableNumber', (async (req, res) => {
   try {
     const {
       tableNumber

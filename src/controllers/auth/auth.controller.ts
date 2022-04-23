@@ -9,7 +9,7 @@ import ErrorResponseHandler from "../../errors/error.response.handler";
 const router: Router = Router();
 
 
-router.post('/login', (async (req, res, next) => {
+router.post('/login', (async (req, res) => {
   try {
     const { email, password } = req.body;
     const dbUser = await getPrismaClient().user
@@ -34,7 +34,7 @@ router.post('/login', (async (req, res, next) => {
   }
 }));
 
-router.post('/register', (async (req, res, next) => {
+router.post('/register', (async (req, res) => {
   try {
     const {
       email,

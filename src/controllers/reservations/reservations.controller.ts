@@ -16,7 +16,7 @@ import { isAdmin } from '../../middleware/roleAuth';
 
 const router: Router = Router();
 
-router.get('/available', (async (req, res, next) => {
+router.get('/available', (async (req, res) => {
   try {
     const requiredSeats = req.query.requiredSeats as string;
     const from = new Date(req.query.from as string);
@@ -35,7 +35,7 @@ router.get('/available', (async (req, res, next) => {
   }
 }));
 
-router.post('/', (async (req, res, next) => {
+router.post('/', (async (req, res) => {
   try {
     const from = new Date(req.body.from as string);
     const to = new Date(req.body.to as string);
@@ -52,7 +52,7 @@ router.post('/', (async (req, res, next) => {
   }
 }));
 
-router.get('/today', (async (req, res, next) => {
+router.get('/today', (async (req, res) => {
   try {
     const today = new Date();
     const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
@@ -68,7 +68,7 @@ router.get('/today', (async (req, res, next) => {
   }
 }));
 
-router.get('/', isAdmin, (async (req, res, next) => {
+router.get('/', isAdmin, (async (req, res) => {
   try {
     const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
     const limit = +req.query.limit || 10;
@@ -90,7 +90,7 @@ router.get('/', isAdmin, (async (req, res, next) => {
   }
 }));
 
-router.delete('/:id', (async (req, res, next) => {
+router.delete('/:id', (async (req, res) => {
   try {
     const { restaurantId } = res.locals.AUTH_USER as JWTPayload;
     const id = +req.params.id;

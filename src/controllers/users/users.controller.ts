@@ -8,7 +8,7 @@ import ErrorResponseHandler from "../../errors/error.response.handler";
 
 const router: Router = Router();
 
-router.get('/', (async (req, res, next) => {
+router.get('/', (async (req, res) => {
   try {
     const authUser = res.locals.AUTH_USER as JWTPayload;
     const users = await getAllUsers(authUser.restaurantId);
@@ -18,7 +18,7 @@ router.get('/', (async (req, res, next) => {
   }
 }));
 
-router.post('/', (async (req, res, next) => {
+router.post('/', (async (req, res) => {
   try {
     const {
       email = '',
