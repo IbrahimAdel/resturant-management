@@ -55,3 +55,15 @@ export const isEmailRegistered = (email: string) => {
     }
   }).then((users) => (users.length !== 0))
 }
+
+export const getUserByEmail = (email: string) => {
+  const client = getPrismaClient();
+  return client.user.findUnique({
+    where: {
+      email
+    }
+  }).then((user) => {
+    if (user) delete user.password;
+    return user;
+  })
+}
