@@ -1,5 +1,5 @@
 import {getPrismaClient} from '../orm/PrismaHandler';
-import CreateUserDTO from '../controllers/users/DTOs/create.user.dto';
+import CreateUserDTO from '../modules/users/DTOs/create.user.dto';
 
 export const getAllUsers = (restaurantId: number) => {
   // TODO needs pagination for scaling, fine for now as it is not required

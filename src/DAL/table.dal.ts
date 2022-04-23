@@ -1,5 +1,5 @@
 import {getPrismaClient} from '../orm/PrismaHandler';
-import CreateTableDto from '../controllers/tables/DTOs/create.table.dto';
+import CreateTableDto from '../modules/tables/DTOs/create.table.dto';
 
 
 export const getAllTablesForRestaurant = (restaurantId: number) => {

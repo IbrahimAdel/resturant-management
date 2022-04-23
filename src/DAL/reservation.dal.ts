@@ -1,5 +1,5 @@
 import {getPrismaClient} from '../orm/PrismaHandler';
-import {getEndOfTheDay, getStartOfTheDay} from '../controllers/reservations/utilities/date.utilities';
+import {getEndOfTheDay, getStartOfTheDay} from '../modules/reservations/utilities/date.utilities';
 import {Page} from '../models/Page.model';
 import {TimeSlot} from "../models/TimeSlot.model";
 

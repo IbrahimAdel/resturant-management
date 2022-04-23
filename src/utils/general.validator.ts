@@ -1,5 +1,5 @@
 import {BaseError, ErrorInput} from '../errors/errros';
-import {getEndOfTheDay} from '../controllers/reservations/utilities/date.utilities';
+import {getEndOfTheDay} from '../modules/reservations/utilities/date.utilities';
 
 export function validateFromAndToDates(from: Date, to: Date) {
   if (!from.valueOf()) {
