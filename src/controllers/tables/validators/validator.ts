@@ -1,6 +1,6 @@
 import CreateUserDTO from '../../users/DTOs/create.user.dto';
 import {BaseError, ErrorInput} from '../../../errors/errros';
-import {getUserIdByEmail} from '../../../DAL/user.dal';
+import {isEmailRegistered} from '../../../DAL/user.dal';
 import CreateTableDto from '../DTOs/create.table.dto';
 import {getTableByNumberAndRestaurantId} from '../../../DAL/table.dal';
 import {getFutureReservationCountForTable} from '../../../DAL/reservation.dal';
@@ -36,8 +36,8 @@ export async function validateCreateUser(user: CreateUserDTO) {
     throw new BaseError(input);
   }
 
-  const emailExist = await getUserIdByEmail(user.email);
-  if (emailExist) {
+  const emailExists = await isEmailRegistered(user.email);
+  if (emailExists) {
     const input: ErrorInput = {
       message: 'email is already registered',
       code: 400,

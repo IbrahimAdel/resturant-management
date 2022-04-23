@@ -11,7 +11,8 @@ const router: Router = Router();
 
 router.post('/login', (async (req, res) => {
   try {
-    const {email, password} = req.body;
+    const email = (req.body.email || '').toLowerCase();
+    const password = req.body.password as string;
     const dbUser = await getPrismaClient().user
       .findUnique({
         where: {
@@ -26,8 +27,10 @@ router.post('/login', (async (req, res) => {
         const accessToken = jwt.sign(user, JWT_SECRET, {expiresIn: '4h'});
         return res.status(200).send({accessToken});
       }
+      console.log(`email:${email} wrong password`)
       return res.status(403).send('Unauthorized');
     }
+    console.log(`email: ${email} not found`)
     return res.status(403).send('Unauthorized');
   } catch (e) {
     return ErrorResponseHandler(res, e);
@@ -37,11 +40,11 @@ router.post('/login', (async (req, res) => {
 router.post('/register', (async (req, res) => {
   try {
     const {
-      email,
       password = '',
       name = '',
       restaurantName = ''
     } = req.body;
+    const email = (req.body.email || '').toLowerCase();
     await validateRegister(password, email);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);

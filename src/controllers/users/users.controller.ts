@@ -29,7 +29,7 @@ router.post('/', (async (req, res) => {
     const authUser = res.locals.AUTH_USER as JWTPayload;
     const userDTO: CreateUserDTO = {
       name,
-      email,
+      email: email.toLowerCase(),
       password,
       restaurantId: authUser.restaurantId,
       number: userNumber

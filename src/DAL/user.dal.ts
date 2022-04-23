@@ -41,27 +41,17 @@ export const createNonAdminUser = (createUserDTO: CreateUserDTO) => {
   });
 };
 
-export const getUserIdByEmail = (email: string) => {
-  const client = getPrismaClient();
-  return client.user
-    .findUnique({
-      where: {
-        email
-      },
-      select: {
-        id: true
-      }
-    }).then((user) => user?.id);
-};
-
 export const isEmailRegistered = (email: string) => {
   const client = getPrismaClient();
-  return client.user.findUnique({
+  return client.user.findMany({
     where: {
-      email
+      email: {
+        equals: email,
+        mode: 'insensitive'
+      }
     },
     select: {
       id: true
     }
-  }).then((user) => (!!user))
+  }).then((users) => (users.length !== 0))
 }
