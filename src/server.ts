@@ -5,6 +5,7 @@ import { getPrismaClient } from './orm/PrismaHandler';
 import AuthController from './controllers/auth/auth.controller';
 import TablesController from './controllers/tables/tables.controller';
 import ReservationsController from './controllers/reservations/reservations.controller';
+import UsersController from "./controllers/users/users.controller";
 import { RoleMiddleware, JWTMiddleware } from './middleware';
 
 const app = express();
@@ -15,6 +16,7 @@ const port = 8080;
 app.use('/auth', AuthController);
 app.use('/tables', JWTMiddleware.verifyToken, RoleMiddleware.isAdmin, TablesController);
 app.use('/reservations', JWTMiddleware.verifyToken, ReservationsController);
+app.use('/users', JWTMiddleware.verifyToken, UsersController);
 dotenv.config() // Load the environment variables
 
 app.listen(port, async () => {
