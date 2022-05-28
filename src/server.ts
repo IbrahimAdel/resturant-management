@@ -25,7 +25,7 @@ const server = app.listen(port, async () => {
     // tslint:disable-next-line:no-console
     console.log('Redis Connected!');
   });
-  const retries = 5;
+  let retries = 5;
   while (retries > 0) {
     try {
       const prismaClient = getPrismaClient();
@@ -38,6 +38,7 @@ const server = app.listen(port, async () => {
       console.log('logging error:');
       console.log(e)
       await new Promise((resolve) => {
+        retries -= 1;
         setTimeout(resolve, 5000);
       });
     }
